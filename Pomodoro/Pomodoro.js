@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+var Timer_1 = require("../Timer/Timer");
 var Pomodoro = /** @class */ (function () {
     function Pomodoro(intervalLength, numberOfIntervals, shortBreakLength, longBreakLength, rlClose) {
         var _this = this;
@@ -11,7 +12,9 @@ var Pomodoro = /** @class */ (function () {
         };
         this.commenceInterval = function () {
             // Give user option to start, skip, cancel
+            _this.TimerInstance = new Timer_1["default"]((_this.intervalLength / 60000) * 60);
             console.log("Interval " + _this.currentInterval + "/" + _this.numberOfIntervals + " has begun!");
+            _this.TimerInstance.commenceTimer();
             setTimeout(function () {
                 _this.endInterval();
             }, _this.intervalLength);

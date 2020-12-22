@@ -1,3 +1,5 @@
+import Timer from '../Timer/Timer';
+
 class Pomodoro {
     intervalLength: number;
     numberOfIntervals: number;
@@ -6,6 +8,7 @@ class Pomodoro {
     currentInterval: number = 1;
     currentBreak: number = 1;
     readlineClose: () => void;
+    TimerInstance: Timer;
 
     constructor(intervalLength: number, numberOfIntervals: number, shortBreakLength: number, longBreakLength: number, rlClose: () => void) {
         this.intervalLength = intervalLength * 60000;
@@ -22,7 +25,9 @@ class Pomodoro {
 
     private commenceInterval = (): void => {
         // Give user option to start, skip, cancel
+        this.TimerInstance = new Timer((this.intervalLength / 60000) * 60);
         console.log(`Interval ${this.currentInterval}/${this.numberOfIntervals} has begun!`);
+        this.TimerInstance.commenceTimer();
         setTimeout(() => {
             this.endInterval();
         }, this.intervalLength);
