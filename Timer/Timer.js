@@ -9,8 +9,9 @@ var Timer = /** @class */ (function () {
                 console.clear();
                 countdown -= 1;
                 var minutes = ~~(countdown / 60);
-                //Seconds should display 0 e.g. 05, 06, 07 not 5, 6, 7
-                var seconds = countdown - minutes * 60;
+                var seconds = (countdown - minutes * 60).toString();
+                if (parseInt(seconds) < 10)
+                    seconds = "0" + seconds;
                 console.log("Left: " + minutes + ":" + seconds);
                 if (countdown < 1) {
                     console.log('Beep beep!');
