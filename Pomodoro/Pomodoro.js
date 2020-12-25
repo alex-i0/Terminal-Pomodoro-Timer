@@ -12,25 +12,26 @@ var Pomodoro = /** @class */ (function () {
         };
         this.commenceInterval = function () {
             // Give user option to start, skip, cancel
-            _this.TimerInstance = new Timer_1["default"]((_this.intervalLength / 60000) * 60);
+            var intervalLengthInSeconds = (_this.intervalLength / 60000) * 60;
+            _this.TimerInstance = new Timer_1["default"](intervalLengthInSeconds, 'Interval', _this.endInterval);
             console.log("Interval " + _this.currentInterval + "/" + _this.numberOfIntervals + " has begun!");
             _this.TimerInstance.commenceTimer();
-            setTimeout(function () {
-                _this.endInterval();
-            }, _this.intervalLength);
         };
         this.commenceBreak = function () {
             // Give user option to start, skip, cancel
-            var breakTime;
+            var breakLengthInSeconds;
             if (_this.currentBreak % 3 !== 0)
-                breakTime = _this.shortBreakLength;
+                breakLengthInSeconds = _this.shortBreakLength;
             if (_this.currentBreak % 3 === 0)
-                breakTime = _this.longBreakLength;
-            console.log("Break time: " + _this.shortBreakLength + " minute(s)");
-            setTimeout(function () {
-                _this.commenceInterval;
-            }, breakTime);
+                breakLengthInSeconds = _this.longBreakLength;
+            breakLengthInSeconds = (breakLengthInSeconds / 60000) * 60;
+            console.log("Break time: " + breakLengthInSeconds / 60 + " minute(s)");
+            _this.TimerInstance = new Timer_1["default"](breakLengthInSeconds, 'Break', _this.endBreak);
+            _this.TimerInstance.commenceTimer();
+        };
+        this.endBreak = function () {
             _this.currentBreak++;
+            _this.commenceInterval();
         };
         this.endInterval = function () {
             console.log('Interval has ended');
@@ -52,8 +53,8 @@ var Pomodoro = /** @class */ (function () {
         };
         this.intervalLength = intervalLength * 60000;
         this.numberOfIntervals = numberOfIntervals;
-        this.shortBreakLength = shortBreakLength;
-        this.longBreakLength = longBreakLength;
+        this.shortBreakLength = shortBreakLength * 60000;
+        this.longBreakLength = longBreakLength * 60000;
         this.readlineClose = rlClose;
     }
     return Pomodoro;

@@ -13,8 +13,8 @@ class Pomodoro {
     constructor(intervalLength: number, numberOfIntervals: number, shortBreakLength: number, longBreakLength: number, rlClose: () => void) {
         this.intervalLength = intervalLength * 60000;
         this.numberOfIntervals = numberOfIntervals;
-        this.shortBreakLength = shortBreakLength;
-        this.longBreakLength = longBreakLength;
+        this.shortBreakLength = shortBreakLength * 60000;
+        this.longBreakLength = longBreakLength * 60000;
         this.readlineClose = rlClose;
     }
 
@@ -25,25 +25,28 @@ class Pomodoro {
 
     private commenceInterval = (): void => {
         // Give user option to start, skip, cancel
-        this.TimerInstance = new Timer((this.intervalLength / 60000) * 60);
+        const intervalLengthInSeconds = (this.intervalLength / 60000) * 60;
+        this.TimerInstance = new Timer(intervalLengthInSeconds, 'Interval', this.endInterval);
         console.log(`Interval ${this.currentInterval}/${this.numberOfIntervals} has begun!`);
         this.TimerInstance.commenceTimer();
-        setTimeout(() => {
-            this.endInterval();
-        }, this.intervalLength);
     };
 
     private commenceBreak = (): void => {
         // Give user option to start, skip, cancel
-        let breakTime;
-        if (this.currentBreak % 3 !== 0) breakTime = this.shortBreakLength;
-        if (this.currentBreak % 3 === 0) breakTime = this.longBreakLength;
+        let breakLengthInSeconds: number;
+        if (this.currentBreak % 3 !== 0) breakLengthInSeconds = this.shortBreakLength;
+        if (this.currentBreak % 3 === 0) breakLengthInSeconds = this.longBreakLength;
+        breakLengthInSeconds = (breakLengthInSeconds / 60000) * 60;
 
-        console.log(`Break time: ${this.shortBreakLength} minute(s)`);
-        setTimeout(() => {
-            this.commenceInterval;
-        }, breakTime);
+        console.log(`Break time: ${breakLengthInSeconds / 60} minute(s)`);
+
+        this.TimerInstance = new Timer(breakLengthInSeconds, 'Break', this.endBreak);
+        this.TimerInstance.commenceTimer();
+    };
+
+    private endBreak = (): void => {
         this.currentBreak++;
+        this.commenceInterval();
     };
 
     private endInterval = (): void => {
