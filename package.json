@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "tsc": "tsc index.ts",
-        "dev": "nodemon index.js"
+        "dev": "nodemon --inspect index.js "
     },
     "keywords": [],
     "author": "",
