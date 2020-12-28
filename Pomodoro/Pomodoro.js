@@ -1,12 +1,17 @@
 "use strict";
 exports.__esModule = true;
 var Timer_1 = require("../Timer/Timer");
+var TimeConverter_1 = require("../TimeConverter/TimeConverter");
 var Pomodoro = /** @class */ (function () {
     function Pomodoro(intervalLength, numberOfIntervals, shortBreakLength, longBreakLength, rlClose) {
         var _this = this;
         this.currentInterval = 1;
         this.currentBreak = 1;
+        this.TimeConverterInstance = new TimeConverter_1["default"]();
+        this.minutesToMiliseconds = this.TimeConverterInstance.minutesToMiliseconds;
+        this.secondsToMiliseconds = this.TimeConverterInstance.secondsToMiliseconds;
         this.initialTimerStatus = function () {
+            //TODO: Replace console.logs with chalk
             console.log('Timer has started!');
             console.log("Timer set for " + _this.intervalLength / 60000 + " minute(s)");
         };
@@ -51,10 +56,10 @@ var Pomodoro = /** @class */ (function () {
             _this.initialTimerStatus();
             _this.commenceInterval();
         };
-        this.intervalLength = intervalLength * 60000;
+        this.intervalLength = this.minutesToMiliseconds(intervalLength);
+        this.shortBreakLength = this.minutesToMiliseconds(shortBreakLength);
+        this.longBreakLength = this.minutesToMiliseconds(longBreakLength);
         this.numberOfIntervals = numberOfIntervals;
-        this.shortBreakLength = shortBreakLength * 60000;
-        this.longBreakLength = longBreakLength * 60000;
         this.readlineClose = rlClose;
     }
     return Pomodoro;

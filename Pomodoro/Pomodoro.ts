@@ -1,4 +1,5 @@
 import Timer from '../Timer/Timer';
+import TimeConverter from '../TimeConverter/TimeConverter';
 
 class Pomodoro {
     intervalLength: number;
@@ -8,17 +9,21 @@ class Pomodoro {
     currentInterval: number = 1;
     currentBreak: number = 1;
     readlineClose: () => void;
-    TimerInstance: Timer;
+    private TimerInstance: Timer;
+    private TimeConverterInstance: TimeConverter = new TimeConverter();
+    private minutesToMiliseconds = this.TimeConverterInstance.minutesToMiliseconds;
+    private secondsToMiliseconds = this.TimeConverterInstance.secondsToMiliseconds;
 
     constructor(intervalLength: number, numberOfIntervals: number, shortBreakLength: number, longBreakLength: number, rlClose: () => void) {
-        this.intervalLength = intervalLength * 60000;
+        this.intervalLength = this.minutesToMiliseconds(intervalLength);
+        this.shortBreakLength = this.minutesToMiliseconds(shortBreakLength);
+        this.longBreakLength = this.minutesToMiliseconds(longBreakLength);
         this.numberOfIntervals = numberOfIntervals;
-        this.shortBreakLength = shortBreakLength * 60000;
-        this.longBreakLength = longBreakLength * 60000;
         this.readlineClose = rlClose;
     }
 
     private initialTimerStatus = (): void => {
+        //TODO: Replace console.logs with chalk
         console.log('Timer has started!');
         console.log(`Timer set for ${this.intervalLength / 60000} minute(s)`);
     };
